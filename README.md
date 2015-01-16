@@ -35,7 +35,7 @@ gitlab_clone currently features the following:
 
 	### Starting Web Clone Process Of The Group Home ###
 
-	Downloading 3 repo(s) into [HOME_DIR]/projects/Work
+	Downloading 3 repo(s) into [HOME_DIR]/projects/Home
 
 	Repo1 directory exists, doing a git pull instead.
 	Cloning Repo2...
