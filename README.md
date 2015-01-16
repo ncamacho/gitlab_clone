@@ -18,7 +18,7 @@ gitlab_clone currently features the following:
 ### Get a list of repos in a group named Home:
   gitlab-clone -l -g Home
   
-  \-------------------------------------------------------------------
+\-------------------------------------------------------------------
   
   
   The following 3 repo(s) were found in the group Home.
