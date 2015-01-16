@@ -14,7 +14,7 @@ gitlab_clone currently features the following:
 
 ## Examples
 ### Get a list of repos in a group named Home:
-  gitlab_clone -l -g Home
+  gitlab-clone -l -g Home
   
   \-------------------------------------------------------------------
   
@@ -28,7 +28,7 @@ gitlab_clone currently features the following:
 \-------------------------------------------------------------------
 
 ### Clone the repos in the group named Home:
-  gitlab_clone -w -g Home
+  gitlab-clone -w -g Home
 
 \-------------------------------------------------------------------
 
@@ -46,4 +46,5 @@ gitlab_clone currently features the following:
 
 ## Installation
 
-    gem install gitlab_clone
+    gem install gitlab_clone 
+    Will give you a command named gitlab-clone to use.
