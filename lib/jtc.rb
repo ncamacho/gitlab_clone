@@ -25,7 +25,7 @@ class Jtc
     puts "-------------------------------------------------------------------\n"
     puts "\tThe following #{repos_list["projects"].length} repo(s) were found in the group #{group_name}.\n\n"
     repo_list["projects"].length.times do |get|
-      puts "\t\t#{repo_list["projects"][get]["name"]}"
+      puts "\t\t#{repos_list["projects"][get]["name"]}"
     end
     puts "\n-------------------------------------------------------------------"
   end
