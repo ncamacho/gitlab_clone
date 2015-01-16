@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
   s.add_dependency("slop", "~> 3.5.0")
   s.add_dependency("httparty", "~> 0.13.1")
   s.homepage    =
-    'https://bird.nnc3.com/home/clonejtc/wikis/home'
+    'https://github.com/ncamacho/gitlab_clone'
   s.license       = 'MIT'
 end
