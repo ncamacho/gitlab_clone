@@ -24,7 +24,7 @@ class Jtc
     repos_list = get_repos(group_name)
     puts "-------------------------------------------------------------------\n"
     puts "\tThe following #{repos_list["projects"].length} repo(s) were found in the group #{group_name}.\n\n"
-    repo_list["projects"].length.times do |get|
+    repos_list["projects"].length.times do |get|
       puts "\t\t#{repos_list["projects"][get]["name"]}"
     end
     puts "\n-------------------------------------------------------------------"
