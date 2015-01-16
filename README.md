@@ -10,7 +10,7 @@ gitlab_clone currently features the following:
 * Can pick what group you can download all the repos in that group from. 
 * Will do a git pull if an existing repo has been detected. 
 * Support for using either ssh or the web url to download. 
-* List the repos in a group. 
+* List the repos in a group before cloning them. 
 
 ## Examples
 ### Get a list of repos in a group named Home:
