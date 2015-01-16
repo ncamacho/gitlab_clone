@@ -1,7 +1,9 @@
 # gitlab_clone  [![Gem Version](https://badge.fury.io/rb/gitlab_clone.png)](http://badge.fury.io/rb/gitlab_clone)
 
 ## Description
-gitlab_clone allows you to clone repositories from a gitlab servers group using the gitlab api. The itch I was scratching by writing this was that I was writing cookbooks for home and work. I wanted an easier way to download all of my cookbooks so that I could work with all of them at once. Anyone that has worked with chef knows that you can have a lot of repos comporising all of your cookbooks...
+gitlab_clone allows you to clone repositories from a gitlab servers group using the gitlab api. 
+
+The itch I was scratching by writing this was that I was writing cookbooks for home and work. I wanted an easier way to download all of my cookbooks so that I could work with all of them at once and not have to break my flow by having to download depended cookbooks later. Anyone that has worked with chef knows that you can have a lot of repos comporising all of your cookbooks...
 
 ## Features
 gitlab_clone currently features the following:
