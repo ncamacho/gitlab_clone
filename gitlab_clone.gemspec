@@ -5,9 +5,9 @@ require 'version'
 Gem::Specification.new do |s|
   s.name        = 'gitlab_clone'
   s.version     = Version::VERSION
-  s.date        = '2015-01-15'
-  s.summary     = "Pulls down the latest repos from a group in gitlab."
-  s.description = "Clones All Repos In A Gitlab Group."
+  s.date        = '2015-01-24'
+  s.summary     = "Pulls down the latest repos from a group in gitlab or a organization group in Github."
+  s.description = "Clones All Repos In A Gitlab Group Or Github Org."
   s.authors     = ["Nestor N. Camacho III"]
   s.email       = 'ncamacho@nnc3.com.to'
   s.files = `git ls-files`.split($/)
