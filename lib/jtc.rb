@@ -13,10 +13,12 @@ class Jtc
     puts "\t-g, --group: will let you choose which gitlab group to look for repos in"
     puts "\t-l, --list: will give you a list of repos in git\n\n"
     puts "\t-w, --web: will clone using web protocol instead of ssh"
+    puts "\t-o, --github: will use Github instead of Gitlab for git server."
 
-    puts "\t NOTE: You need to set gitlab_server and gitlab_token for this to work."
+    puts "\t NOTE: You need to set gitlab_server and gitlab_token or github_token for this to work."
     puts "\t\texample: export gitlab_server=\"http[s]://[server_name]/api/v3\""
     puts "\t\t\t export gitlab_token=\"secret_token\""
+    puts "\t\t\t export github_token=\"secret_token\""
     puts "-------------------------------------------------------------------\n\n"
   end
 

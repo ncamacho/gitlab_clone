@@ -5,22 +5,11 @@ require "json"
 require "fileutils"
 require "git"
 require "jtc"
+require "github"
 require "version"
 require "slop"
 require "httparty"
 
-# Check to see if we have vars set in envs and alert if we don't have them set...
-
-
-unless ENV['gitlab_server'] && ENV['gitlab_token']
-  puts "-----------------------------------------------------------\n\n"
-  puts "You need to set the environment vars first before proceeding"
-  puts "for gitlab_token and gitlab_server in order to run gitlab-clone.\n\n"
-  puts "  example: export gitlab_server=\"http[s]://[server_name]/api/v3\""
-  puts "           export gitlab_token=\"secret_token\"\n\n"
-  puts "-----------------------------------------------------------\n"
-  exit
-end
 
 opts = Slop.parse do
   on :h, :help, 'help'
@@ -29,6 +18,31 @@ opts = Slop.parse do
   on :l, :list, 'list'
   on :v, :version, 'version'
   on :g, :group=, 'group'
+  on :o, :github, 'github'
+end
+
+if (opts[:v] && !ENV['gitlab_server'] && !ENV['gitlab_token']) || (opts[:o] && opts[:v] && !ENV['github_token'])
+  Jtc.version
+end
+
+# Check to see if we have vars set in envs and alert if we don't have them set...
+unless ENV['gitlab_server'] && ENV['gitlab_token']
+  puts "-----------------------------------------------------------\n\n"
+  puts "You need to set the environment vars first before proceeding."
+  puts "For gitlab_token and gitlab_server in order to run gitlab-clone.\n\n"
+  puts "  example: export gitlab_server=\"http[s]://[server_name]/api/v3\""
+  puts "           export gitlab_token=\"secret_token\"\n\n"
+  puts "-----------------------------------------------------------\n"
+  exit
+end
+
+if opts[:o] && !ENV['github_token']
+  puts "-----------------------------------------------------------\n\n"
+  puts "You need to set the environment vars first before proceeding"
+  puts "For Github support you need to add your Github token.\n\n"
+  puts "  example: export github_token=\"secret_token\"\n\n"
+  puts "-----------------------------------------------------------\n"
+  exit
 end
 
 if ARGV[0].nil?
@@ -47,19 +61,29 @@ else
 
 if opts[:g]
   clone_group = opts[:g]
-else 
+elsif opts[:l] || opts[:o] || opts[:w] || opts[:c]  
+  puts "No organizational or group name was given using default of \"Cookbooks\"\n\n" 
   clone_group = "Cookbooks"
 end
 
-  if opts[:h]
-    Jtc.printhelp
-    elsif opts[:c]
-      Jtc.clone(0, clone_group)
-    elsif opts[:w]
-      Jtc.clone(1, clone_group)
-    elsif opts[:v]
-      Jtc.version
-    elsif opts[:l]
-      Jtc.list_repos(clone_group)    
+
+if opts[:o]
+  class_to_use = Github
+else
+  class_to_use = Jtc
+end
+
+if opts[:h]
+  Jtc.printhelp
+  elsif opts[:c]
+    class_to_use.clone(0, clone_group)
+  elsif opts[:w]
+    class_to_use.clone(1, clone_group)
+  elsif opts[:v]
+    Jtc.version
+  elsif opts[:l]
+    class_to_use.list_repos(clone_group)    
   end
 end
+
+
