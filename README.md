@@ -7,10 +7,15 @@ The itch I was scratching by writing this was that I was writing cookbooks for h
 
 
 Your tokens for either Gitlab or Gitgub are stored in the settings of your user profile. 
+
+
 For gitlab it will be:
+
 http://gitlab_server/profile/account
 
+
 For github it will be:
+
 https://github.com/settings/applications
 
 ## Features
