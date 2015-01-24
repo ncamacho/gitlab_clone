@@ -7,7 +7,7 @@ The itch I was scratching by writing this was that I was writing cookbooks for h
 
 ## Features
 gitlab_clone currently features the following:
-
+* Github organization supprt. You can bring down all the repos in an organization that you have access to. 
 * Default cloning of all repos that are in a group called Cookbooks.
 * Can pick what group you can download all the repos in that group from. 
 * Will do a git pull if an existing repo has been detected. 
