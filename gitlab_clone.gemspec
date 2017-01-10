@@ -5,7 +5,7 @@ require 'version'
 Gem::Specification.new do |s|
   s.name        = 'gitlab_clone'
   s.version     = Version::current
-  s.date        = '2017-01-24'
+  s.date        = '2017-01-11'
   s.summary     = "Pulls down the latest repos from a group in gitlab or a organization group in Github."
   s.description = "Clones All Repos In A Gitlab Group Or Github Org."
   s.authors     = ["Nestor N. Camacho III"]
