@@ -4,12 +4,13 @@
 require "json"
 require "fileutils"
 require "git"
-require "jtc"
+require "gitlab"
+require "setup"
 require "github"
 require "version"
 require "slop"
 require "httparty"
-
+require "rainbow"
 
 opts = Slop.parse do
   on :h, :help, 'help'
@@ -19,71 +20,64 @@ opts = Slop.parse do
   on :v, :version, 'version'
   on :g, :group=, 'group'
   on :o, :github, 'github'
+  on :n, :config, 'print config'
+  on :r, :reconfigure, 'reconfigure gitlab server and token settings'
 end
 
-if (opts[:v] && !ENV['gitlab_server'] && !ENV['gitlab_token']) || (opts[:o] && opts[:v] && !ENV['github_token'])
-  Jtc.version
-end
-
-# Check to see if we have vars set in envs and alert if we don't have them set...
-unless ENV['gitlab_server'] && ENV['gitlab_token']
-  puts "-----------------------------------------------------------\n\n"
-  puts "You need to set the environment vars first before proceeding."
-  puts "For gitlab_token and gitlab_server in order to run gitlab-clone.\n\n"
-  puts "  example: export gitlab_server=\"http[s]://[server_name]/api/v3\""
-  puts "           export gitlab_token=\"secret_token\"\n\n"
-  puts "-----------------------------------------------------------\n"
-  exit
-end
-
-if opts[:o] && !ENV['github_token']
-  puts "-----------------------------------------------------------\n\n"
-  puts "You need to set the environment vars first before proceeding"
-  puts "For Github support you need to add your Github token.\n\n"
-  puts "  example: export github_token=\"secret_token\"\n\n"
-  puts "-----------------------------------------------------------\n"
-  exit
-end
-
+# If no arugments are passed, give help information
 if ARGV[0].nil?
-  Jtc.printhelp
+  Gitlab.printhelp
 end
+
+if opts[:o] && !Setup.github_precheck
+  puts Rainbow("Whoops looks like you have not set your Github token yet. Would you like to do so now?").yellow
+  answer = STDIN.gets.chomp.downcase
+  if answer == "y" or answer == "yes"
+    Setup.github_configure
+  end
+  exit
+end
+
 
 opts.to_hash
 
 if opts[:c] && opts[:w]
-  puts "\n\t############################################\n"
-  puts "\t    You can't web clone and ssh clone"
-  puts "\t    Look at help below for valid options"
-  puts "\t############################################\n\n"
-  Jtc.printhelp
+  puts Rainbow("\n\t############################################").red
+  puts Rainbow("\t    You can't web clone and ssh clone").red
+  puts Rainbow("\t    gitlab-clone -h for more information").red
+  puts Rainbow("\t############################################\n").red
 else
+
+if opts[:o] && !opts[:g]
+  puts Rainbow("Github option requiers you to enter a organizational name.\n\n").red
+end
 
 if opts[:g]
   clone_group = opts[:g]
-elsif opts[:l] || opts[:o] || opts[:w] || opts[:c]  
-  puts "No organizational or group name was given using default of \"Cookbooks\"\n\n" 
+elsif opts[:l] || opts[:o] || opts[:w] || opts[:c]
+  puts Rainbow("\nNo organizational or group name was given. Using default of \"Cookbooks\"\n\n").purple.italic
   clone_group = "Cookbooks"
 end
-
 
 if opts[:o]
   class_to_use = Github
 else
-  class_to_use = Jtc
+  class_to_use = Gitlab
 end
 
 if opts[:h]
-  Jtc.printhelp
+  Gitlab.printhelp
+  elsif opts[:r]
+    Setup.configure
   elsif opts[:c]
     class_to_use.clone(0, clone_group)
   elsif opts[:w]
     class_to_use.clone(1, clone_group)
   elsif opts[:v]
-    Jtc.version
+    Version::version
+  elsif opts[:n]
+    Gitlab.config
   elsif opts[:l]
-    class_to_use.list_repos(clone_group)    
+    class_to_use.list_repos(clone_group)
   end
 end
-
-

@@ -22,11 +22,11 @@ def self.clone(web, group_name)
     if File.directory?("#{repos_dir}")
       FileUtils::mkdir_p repos_dir
     end
-    
+
     if web == 1
       repo_location = 'clone_url'
       message = "Web"
-    else 
+    else
       repo_location = 'ssh_url'
       message = "Ssh"
     end
@@ -47,7 +47,7 @@ def self.clone(web, group_name)
         g.pull
       else
         puts "\tCloning #{repo_name}..."
-        Git.clone("#{repo}", "#{repo_dir}") 
+        Git.clone("#{repo}", "#{repo_dir}")
       end
     end
     puts "-------------------------------------------------------------------\n"
