@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.add_dependency("git", "~> 1.2.6")
   s.add_dependency("slop", "~> 3.5.0")
   s.add_dependency("httparty", "~> 0.13.1")
+  s.add_dependency("rainbow", "~> 3.0.0")
   s.homepage    = 'https://github.com/ncamacho/gitlab_clone'
   s.license     = 'MIT'
   s.post_install_message = "\n\n\tGitlab Clone is now installed!\n\n"
