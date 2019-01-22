@@ -24,8 +24,8 @@ opts = Slop.parse do
   on :r, :reconfigure, 'reconfigure gitlab server and token settings'
 end
 
-# If no arugments are passed, give help information
-if ARGV[0].nil?
+# If no arugments are passed, or none of approved ones, give help information
+if ARGV[0].nil? || !(/h|c|w|l|v|g|o|n|r/)
   Gitlab.printhelp
 end
 
@@ -65,19 +65,23 @@ else
   class_to_use = Gitlab
 end
 
-if opts[:h]
-  Gitlab.printhelp
-  elsif opts[:r]
-    Setup.configure
-  elsif opts[:c]
-    class_to_use.clone(0, clone_group)
-  elsif opts[:w]
-    class_to_use.clone(1, clone_group)
-  elsif opts[:v]
-    Version::version
-  elsif opts[:n]
-    Gitlab.config
-  elsif opts[:l]
-    class_to_use.list_repos(clone_group)
+begin
+  if opts[:h]
+    Gitlab.printhelp
+    elsif opts[:r]
+      Setup.configure
+    elsif opts[:c]
+      class_to_use.clone(0, clone_group)
+    elsif opts[:w]
+      class_to_use.clone(1, clone_group)
+    elsif opts[:v]
+      Version::version
+    elsif opts[:n]
+      Gitlab.config
+    elsif opts[:l]
+      class_to_use.list_repos(clone_group)
+    end
+  rescue
+    puts Rainbow("Looks like there was an issue. Please verify host and api version with \"#{File.basename($0)} -n\" to show configuration.").red.italic
   end
 end

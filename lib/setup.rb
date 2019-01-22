@@ -68,9 +68,19 @@ class Setup
       params = {}
     end
     puts Rainbow("What is the name of your gitlab server?\nExample: http[s]://server.domain.tld:\nServer: ").purple
-    answer = STDIN.gets.chomp.downcase
-    answer = "#{answer}/api/v3"
-    params["gitlab_server"] = answer
+    host = STDIN.gets.chomp.downcase
+
+### Lets get/set the version we are going to use for the API
+    puts Rainbow("What Gitlab API version are you using: v3 or v4? Press enter if unsure (default is v4).").purple
+    check = STDIN.gets.chomp.downcase
+    if check == ""
+      ver = "v4"
+    else
+      ver = check
+    end
+
+    gitlab_host = "#{host}/api/#{ver}"
+    params["gitlab_server"] = gitlab_host
     params["gitlab_server"]
     puts Rainbow("What is your token?\nExample: 3pe14gZfap:\nToken: ").purple
     params["gitlab_token"] = STDIN.gets.chomp

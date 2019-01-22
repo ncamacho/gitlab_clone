@@ -8,7 +8,7 @@ class Gitlab
 
   def self.printhelp
     puts Rainbow("---------------------------------------------------------------------------------------\n").green
-    puts Rainbow("\t\t###### Options for gitlab_clone ######\n\n").green
+    puts Rainbow("\t\t###### Options for #{File.basename($0)} ######\n\n").green
     puts Rainbow("\t-h, --help: shows this help message").green
     puts Rainbow("\t-c, --clone: clones all repos from https://gitlab_server/groups/Cookbooks
                          into a ~/code/Cookbooks directory by default").green
