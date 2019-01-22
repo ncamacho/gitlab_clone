@@ -1,7 +1,7 @@
-# gitlab_clone  [![Gem Version](https://badge.fury.io/rb/gitlab_clone.png)](http://badge.fury.io/rb/gitlab_clone)
+# gitlab-clone  [![Gem Version](https://badge.fury.io/rb/gitlab-clone.png)](http://badge.fury.io/rb/gitlab-clone)
 
 ## Description
-gitlab_clone allows you to clone repositories from a gitlab server's group using the gitlab api. 
+gitlab-clone allows you to clone repositories from a gitlab server's group using the gitlab api. 
 
 The itch I was scratching by writing this was that I was writing cookbooks for home and work. I wanted an easier way to download all of my cookbooks so that I could work with all of them at once and not have to break my flow by having to download depended cookbooks later. Anyone that has worked with chef knows that you can have a lot of repos comporising all of your cookbooks...
 
@@ -19,7 +19,7 @@ For github it will be:
 https://github.com/settings/applications
 
 ## Features
-gitlab_clone currently features the following:
+gitlab-clone currently features the following:
 * Github organization supprt. You can bring down all the repos in an organization that you have access to. 
 * Default cloning of all repos that are in a group called Cookbooks.
 * Can pick what group you can download all the repos in that group from. 
@@ -78,5 +78,5 @@ gitlab_clone currently features the following:
 
 ## Installation
 
-    gem install gitlab_clone 
+    gem install gitlab-clone 
     Will give you a command named gitlab-clone to use.
