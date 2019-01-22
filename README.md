@@ -1,4 +1,4 @@
-# gitlab-clone  [![Gem Version](https://badge.fury.io/rb/gitlab-clone.png)](http://badge.fury.io/rb/gitlab-clone)
+# gitlab-clone  [![Gem Version](https://badge.fury.io/rb/gitlab_clone.png)](http://badge.fury.io/rb/gitlab_clone)
 
 ## Description
 gitlab-clone allows you to clone repositories from a gitlab server's group using the gitlab api. 
