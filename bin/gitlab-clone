@@ -25,7 +25,7 @@ opts = Slop.parse do
 end
 
 # If no arugments are passed, or none of approved ones, give help information
-if ARGV[0].nil? || !(/h|c|w|l|v|g|o|n|r/)
+if ARGV[0].nil?
   Gitlab.printhelp
 end
 
