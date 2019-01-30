@@ -12,76 +12,85 @@ require "slop"
 require "httparty"
 require "rainbow"
 
-opts = Slop.parse do
-  on :h, :help, 'help'
-  on :c, :clone, 'clone'
-  on :w, :web, 'web'
-  on :l, :list, 'list'
-  on :v, :version, 'version'
-  on :g, :group=, 'group'
-  on :o, :github, 'github'
-  on :n, :config, 'print config'
-  on :r, :reconfigure, 'reconfigure gitlab server and token settings'
-end
+class GitlabClone
+  def self.dothething
+    opts = Slop.parse do |o|
+      o.bool '-h', '--help', 'help'
+      o.bool '-c', '--clone', 'clone'
+      o.bool '-w', '--web', 'web'
+      o.bool '-l', '--list', 'list'
+      o.bool '-v', '--version', 'version'
+      o.string '-g', '--group', 'group'
+      o.bool '-o', '--github', 'github'
+      o.bool '-n', '--config', 'print config'
+      o.bool '-r', '--reconfigure', 'reconfigure gitlab server and token settings'
+    end
 
-# If no arugments are passed, or none of approved ones, give help information
-if ARGV[0].nil?
-  Gitlab.printhelp
-end
+    # If no arugments are passed, or none of approved ones, give help information
+    if ARGV[0].nil?
+      Gitlab.printhelp
+    end
 
-if opts[:o] && !Setup.github_precheck
-  puts Rainbow("Whoops looks like you have not set your Github token yet. Would you like to do so now?").yellow
-  answer = STDIN.gets.chomp.downcase
-  if answer == "y" or answer == "yes"
-    Setup.github_configure
+    if opts[:github] && !Setup.github_precheck
+      puts Rainbow("Whoops looks like you have not set your Github token yet. Would you like to do so now?").yellow
+      answer = STDIN.gets.chomp.downcase
+      if answer == "y" or answer == "yes"
+        Setup.github_configure
+      end
+      exit;
+    end
+
+    if opts[:clone] && opts[:web]
+      puts Rainbow("\n\t############################################").red
+      puts Rainbow("\t    You can't web clone and ssh clone").red
+      puts Rainbow("\t    gitlab-clone -h for more information").red
+      puts Rainbow("\t############################################\n").red
+    else
+
+    if opts[:github] && !opts[:group]
+      puts Rainbow("Github option requiers you to enter a organizational name.\n\n").red
+    end
+
+    if opts[:group]
+      clone_group = opts[:group]
+    elsif opts[:list] || opts[:github] || opts[:web] || opts[:clone]
+      puts Rainbow("\nNo organizational or group name was given. Using default of \"Cookbooks\"\n\n").purple.italic
+      clone_group = "Cookbooks"
+    end
+
+    if opts[:github]
+      class_to_use = Github
+    else
+      class_to_use = Gitlab
+    end
+
+    begin
+      if opts[:help]
+        Gitlab.printhelp
+        elsif opts[:reconfigure]
+          Setup.configure
+        elsif opts[:clone]
+          class_to_use.clone(0, clone_group)
+        elsif opts[:web]
+          class_to_use.clone(1, clone_group)
+        elsif opts[:version]
+          Version::version
+        elsif opts[:config]
+          Gitlab.config
+        elsif opts[:list]
+          class_to_use.list_repos(clone_group)
+        end
+      rescue
+        puts Rainbow("Looks like there was an issue. Please verify host and api version with \"#{File.basename($0)} -n\" to show configuration.").red.italic
+      end
+    end
   end
-  exit
-end
-
-
-opts.to_hash
-
-if opts[:c] && opts[:w]
-  puts Rainbow("\n\t############################################").red
-  puts Rainbow("\t    You can't web clone and ssh clone").red
-  puts Rainbow("\t    gitlab-clone -h for more information").red
-  puts Rainbow("\t############################################\n").red
-else
-
-if opts[:o] && !opts[:g]
-  puts Rainbow("Github option requiers you to enter a organizational name.\n\n").red
-end
-
-if opts[:g]
-  clone_group = opts[:g]
-elsif opts[:l] || opts[:o] || opts[:w] || opts[:c]
-  puts Rainbow("\nNo organizational or group name was given. Using default of \"Cookbooks\"\n\n").purple.italic
-  clone_group = "Cookbooks"
-end
-
-if opts[:o]
-  class_to_use = Github
-else
-  class_to_use = Gitlab
 end
 
 begin
-  if opts[:h]
-    Gitlab.printhelp
-    elsif opts[:r]
-      Setup.configure
-    elsif opts[:c]
-      class_to_use.clone(0, clone_group)
-    elsif opts[:w]
-      class_to_use.clone(1, clone_group)
-    elsif opts[:v]
-      Version::version
-    elsif opts[:n]
-      Gitlab.config
-    elsif opts[:l]
-      class_to_use.list_repos(clone_group)
-    end
-  rescue
-    puts Rainbow("Looks like there was an issue. Please verify host and api version with \"#{File.basename($0)} -n\" to show configuration.").red.italic
-  end
+  GitlabClone.dothething
+rescue Interrupt
+  puts Rainbow("\n\nStopping...").yellow.bright
+rescue 
+  puts Rainbow("\nUnknown options. Wanna try that again?").red.bright
 end

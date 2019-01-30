@@ -5,7 +5,7 @@ require 'version'
 Gem::Specification.new do |s|
   s.name        = 'gitlab_clone'
   s.version     = Version::current
-  s.date        = '2019-01-22'
+  s.date        = '2019-01-30'
   s.summary     = "Pulls down the latest repos from a group in gitlab or a organization group in Github."
   s.description = "Clones All Repos In A Gitlab Group Or Github Org."
   s.authors     = ["Nestor N. Camacho III"]
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.files       = `git ls-files`.split($/)
   s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.add_dependency("git", "~> 1.2.6")
-  s.add_dependency("slop", "~> 3.5.0")
+  s.add_dependency("slop", ">= 4.0.0")
   s.add_dependency("httparty", "~> 0.13.1")
   s.add_dependency("rainbow", "~> 3.0.0")
   s.homepage    = 'https://github.com/ncamacho/gitlab_clone'
