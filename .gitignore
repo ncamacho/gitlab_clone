@@ -1,0 +1,4 @@
+## Ignore builder and gemfiles
+*.gem
+buildagain
+
