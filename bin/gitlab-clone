@@ -17,8 +17,12 @@ class GitlabClone
     opts = Slop.parse do |o|
       o.bool '-h', '--help', 'help'
       o.bool '-c', '--clone', 'clone'
+      o.bool '-ca', '--clone_all', 'clone_all'
       o.bool '-w', '--web', 'web'
+      o.bool '-wa', '--web_all', 'web_all'
       o.bool '-l', '--list', 'list'
+      o.bool '-la', '--list_all', 'list_all'
+      o.bool '-lg', '--list_groups', 'list_groups'
       o.bool '-v', '--version', 'version'
       o.string '-g', '--group', 'group'
       o.bool '-o', '--github', 'github'
@@ -65,23 +69,32 @@ class GitlabClone
     end
 
     begin
-      if opts[:help]
-        Gitlab.printhelp
+        if opts[:help]
+          Gitlab.printhelp
         elsif opts[:reconfigure]
           Setup.configure
         elsif opts[:clone]
           class_to_use.clone(0, clone_group)
         elsif opts[:web]
           class_to_use.clone(1, clone_group)
+        elsif opts[:clone_all]
+          class_to_use.clone_all(0)
+        elsif opts[:web_all]
+          class_to_use.clone_all(1)
         elsif opts[:version]
           Version::version
         elsif opts[:config]
           Gitlab.config
         elsif opts[:list]
           class_to_use.list_repos(clone_group)
+	elsif opts[:list_all]
+          class_to_use.list_all_repos
+	elsif opts[:list_groups]
+          puts class_to_use.get_groups
         end
-      rescue
+      rescue => e
         puts Rainbow("Looks like there was an issue. Please verify host and api version with \"#{File.basename($0)} -n\" to show configuration.").red.italic
+	puts Rainbow("Error message: #{e} \nBacktrace: #{e.backtrace}").red.italic
       end
     end
   end

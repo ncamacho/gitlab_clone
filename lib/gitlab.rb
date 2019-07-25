@@ -2,18 +2,17 @@ class Gitlab
   require "setup"
   require "rainbow"
 
-  user_home = ENV['HOME']
-  user_defined_dir = "code" ### need to add the ability to set this dynamically
-  HOME = "#{user_home}/#{user_defined_dir}"
-
   def self.printhelp
     puts Rainbow("---------------------------------------------------------------------------------------\n").green
     puts Rainbow("\t\t###### Options for #{File.basename($0)} ######\n\n").green
     puts Rainbow("\t-h, --help: shows this help message").green
     puts Rainbow("\t-c, --clone: clones all repos from https://gitlab_server/groups/Cookbooks
                          into a ~/code/Cookbooks directory by default").green
+    puts Rainbow("\t-ca, --clone_all: will clone all repositories ssh").green
     puts Rainbow("\t-w, --web: will clone using web protocol instead of ssh").green
-    puts Rainbow("\t-l, --list: will give you a list of repos in git").green
+    puts Rainbow("\t-wa, --web_all: will clone all repositories using web protocol instead of ssh").green
+    puts Rainbow("\t-l, --list: will give you a list of repos in git (need param group)").green
+    puts Rainbow("\t-la, --list_all: will give you a list of all repos in git").green
     puts Rainbow("\t-g, --group: will let you choose which gitlab group to look for repos in").green
     puts Rainbow("\t-o, --github: will allow you to clone from Github").green
     puts Rainbow("\t-n, --config: will print your current configuration settings").green
@@ -23,18 +22,37 @@ class Gitlab
   end
 
   def self.list_repos(group_name)
-    repos_list = get_repos(group_name)
+    if (repos_list = get_repos(group_name)).empty?
+      puts Rainbow("\n---\nNot repositories were found in group '#{group_name}'\n---\n").red
+      return
+    end
     puts Rainbow("-------------------------------------------------------------------\n").green
-    puts Rainbow("\tThe following #{repos_list["projects"].length} repo(s) were found in the group #{group_name}.").green
+    puts Rainbow("\tThe following #{repos_list["projects"].length} repo(s) were found in the group '#{Rainbow(group_name).red}'.").green
     repos_list["projects"].length.times do |get|
       puts Rainbow("\t\t#{repos_list["projects"][get]["name"]}").blue
     end
     puts Rainbow("\n-------------------------------------------------------------------").green
   end
 
+  def self.list_all_repos
+    get_groups.each{|group_name,group_id| 
+      list_repos(group_name)
+    }
+  end
+
+  def self.clone_all(web)
+    get_groups.each{|group_name,group_id| 
+      clone(web, group_name)
+    }
+  end
+
   def self.clone(web, group_name)
-    repos_list = get_repos(group_name)
-    repos_dir = "#{HOME}/#{group_name}"
+    if (repos_list = get_repos(group_name)).empty?
+      puts Rainbow("\n---\nNot repositories were found in group '#{group_name}'\n---\n").red
+      return
+    end
+
+    repos_dir = "#{Setup.get_backup_dir}/#{group_name}"
 
     if File.directory?("#{repos_dir}")
       FileUtils::mkdir_p repos_dir
@@ -77,7 +95,7 @@ class Gitlab
   end
 
   def self.get_groups
-    string = HTTParty.get("#{Setup.get_gitlabserver}/groups", :headers => {"PRIVATE-TOKEN" => "#{Setup.get_token}" }, :verify => false).to_json
+    string = HTTParty.get("#{Setup.get_gitlabserver}/groups?all_available=true", :headers => {"PRIVATE-TOKEN" => "#{Setup.get_token}" }, :verify => false).to_json
     api_ids = JSON.parse(string)
     group_ids = {}
     api_ids.each do |id|
@@ -94,7 +112,7 @@ class Gitlab
     if Setup.github_precheck
       puts Rainbow("\tCurrent Github token:\t\t #{Setup.get_github_token}").green
     end
-    puts Rainbow("\tCurrent home directory:\t\t #{HOME}").green
+    puts Rainbow("\tCurrent backup directory:\t\t #{Setup.get_backup_dir}").green
     puts
     puts Rainbow("#######################################################################").green
   end
