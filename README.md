@@ -78,5 +78,5 @@ gitlab-clone currently features the following:
 
 ## Installation
 
-    gem install gitlab-clone 
+    gem install gitlab_clone 
     Will give you a command named gitlab-clone to use.
