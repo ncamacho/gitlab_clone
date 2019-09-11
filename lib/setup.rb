@@ -1,8 +1,8 @@
 class Setup
   require "rainbow"
 
-  user_home=ENV['HOME']
-  CONFIG = "#{user_home}/.gitlab_config"
+  USER_HOME=ENV['HOME']
+  CONFIG = "#{USER_HOME}/.gitlab_config"
 
 ### This checks to see if the json we are getting from the file is valid or not.
   def self.valid_json
@@ -81,7 +81,7 @@ class Setup
 
     gitlab_host = "#{host}/api/#{ver}"
     params["gitlab_server"] = gitlab_host
-    params["gitlab_server"]
+
     puts Rainbow("What is your token?\nExample: 3pe14gZfap:\nToken: ").purple
     params["gitlab_token"] = STDIN.gets.chomp
     puts Rainbow("Do you wish to do the Github token now too? ").purple
@@ -91,6 +91,10 @@ class Setup
       puts Rainbow("What is your Github token? ").purple
       params["github_token"] = STDIN.gets.chomp
     end
+
+    puts Rainbow("Backup directory? (default #{USER_HOME}/code).").purple
+    dir = STDIN.gets.chomp
+    params['backup_dir'] = dir.empty? ? "#{USER_HOME}/code" : dir
 
     save = JSON.generate(params)
     puts Rainbow("\n\nUpdating config file with the following:").purple
@@ -176,4 +180,16 @@ class Setup
       return params["gitlab_server"]
     end
   end
+
+  def self.get_backup_dir
+    unless Setup.precheck
+      puts Rainbow("\n\nWhoops! Looks like we have not setup a config before...\n").yellow
+      Setup.configure
+    else
+      JSON.parse(File.read(CONFIG))
+      params = JSON.parse(File.read(CONFIG))
+      return params["backup_dir"]
+    end
+  end
+
 end
